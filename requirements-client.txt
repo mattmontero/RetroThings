@@ -1,0 +1,10 @@
+certifi==2020.6.20
+chardet==3.0.4
+idna==2.10
+PySide2==5.15.0
+python-engineio==3.13.1
+python-socketio==4.6.0
+requests==2.23.0
+shiboken2==5.15.0
+six==1.15.0
+urllib3==1.25.10
