@@ -1,2 +1,2 @@
-# RetroThings
+# RetroThings - Client
 Things for Retrospective
