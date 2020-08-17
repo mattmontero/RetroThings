@@ -10,7 +10,6 @@ class RetroWidget(BaseWidget):
         super(RetroWidget, self).__init__(*args, **kwargs)
         self.app_man = app_man
         self.layout = QVBoxLayout()
-
         self.name_row = QHBoxLayout()
 
         ##### Everything we need for display boxes #####

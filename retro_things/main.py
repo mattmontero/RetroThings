@@ -9,9 +9,8 @@ from PySide2.QtWidgets import QHBoxLayout, QVBoxLayout
 
 from app_manager import AppManager
 from store import create_store
-from components.retro_widget import RetroWidget
-from components.color_game import ColorGame
-from components.sign_in import SignIn
+from apps.retro_widget import RetroWidget
+from apps.color_game import ColorGame
 
 
 if __name__ == "__main__":
@@ -31,9 +30,6 @@ if __name__ == "__main__":
 
         rw = RetroWidget(app_man)
         app_man.add_widget(rw, ["retro"])
-
-        # si = SignIn()
-        # app_man.add_widget(si, [])
 
         app_man.run()
     except Exception as e:
