@@ -58,9 +58,14 @@ class AppManager(QObject):
             stop = time.perf_counter()
 
         self.sio = AppManager.singleton.sio
-        self.emit = self.sio.emit
+        self._emit = self.sio.emit
         self._app = self._main_widget = self._main_layout = None
         self._is_running = False
+
+    def emit(self, event, payload):
+        """ Wrap all emits to send user info """
+        payload.update({"user": self.sio.sid})
+        self._emit(event, payload)
 
     def connect_qt(self, app, main_widget, main_layout):
         self._app = app

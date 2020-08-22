@@ -11,6 +11,7 @@ from app_manager import AppManager
 from store import create_store
 from apps.retro_widget import RetroWidget
 from apps.color_game import ColorGame
+from apps.retro_app import RetroApp
 
 
 if __name__ == "__main__":
@@ -28,7 +29,10 @@ if __name__ == "__main__":
         # wid = ColorGame()
         # app_man.add_widget(wid, ['color_game'])
 
-        rw = RetroWidget(app_man)
+        # rw = RetroWidget(app_man)
+        # app_man.add_widget(rw, ["retro"])
+
+        rw = RetroApp(app_man)
         app_man.add_widget(rw, ["retro"])
 
         app_man.run()
