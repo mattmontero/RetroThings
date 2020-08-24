@@ -91,6 +91,12 @@ class AppManager(QObject):
         widget.init_update(AppManager.server_state)
 
     def update(self, data):
+        """
+        Each App will be responsible to update itself.
+        All this method does is send the necessary data to each app based
+        on where the app is subscribed.
+        NOTE: Each app must implement the update method to recieve server data
+        """
         widgets = list()
         AppManager.server_state = data['server']
         init = data['store'] if data['store'] == "init" else None

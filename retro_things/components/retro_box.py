@@ -34,6 +34,11 @@ class TileList(QWidget):
         self.layout.addWidget(new_tile)
 
 class RetroBox(QWidget):
+    """
+    This box contains a lable component and text entry field.
+    """
+    # submit_signal should be connected to the owning app.
+    # This is emited any time that an entry is submitted
     submit_signal = Signal(dict)
     def __init__(self, label, *args, **kwargs):
         super(RetroBox, self).__init__(*args, **kwargs)
@@ -54,46 +59,68 @@ class RetroBox(QWidget):
         self.header = QHBoxLayout()
         self.label = QLabel(label)
         self.add_button = QPushButton("+")
-        self.add_button.setEnabled(False)
         # End Header #
 
-        # Scroll Area #
+        # Scroll Area Components #
+        # TODO: Create a component to contain both tile_list and QScrollArea
         self.tile_list = TileList()
         self.scroll_area = QScrollArea(self)
-        self.scroll_area.setFixedSize(500,200)
-        self.scroll_area.setWidget(self.tile_list)
-        self.scroll_area.setWidgetResizable(True)
 
-        # Tile Panel #
-        self.tile_panel = QVBoxLayout()
+        # This is a data field. It contains all info from the server for this corresponding box
+        # This is used to update the scroll area tiles
         self.retro_tiles_list = list()
-        # End Tile Panel components #
+        # Scroll Area CComponents #
 
         self._setup()
 
     def _setup(self):
+        """ Set initial view state and connect things """
+        # By Default, add acction is disabled
+        self.add_button.setEnabled(False)
+
+        # Scroll area component #
+        self.scroll_area.setFixedSize(500,200)
+        self.scroll_area.setWidget(self.tile_list)
+        self.scroll_area.setWidgetResizable(True)
+
+        # Header Component #
         self.add_button.clicked.connect(self.accept_input)
         self.add_button.setFixedSize(50, 50)
         self.header.addWidget(self.label)
         self.header.addWidget(self.add_button)
 
+        # Add to layout #
         self.layout.addLayout(self.header)
         self.layout.addWidget(self.scroll_area)
         self.setLayout(self.layout)
 
     def init_update(self, data):
-        print("Just joined? Let's set up all the data we know about")
+        """ init_update is not hooked up correctly from Application Manager. Pass for now... """
         pass
 
     def update(self, data):
+        """
+        This update is invoked by the its parent app.
+        The Parent app should pass down the server data since the parent app
+        is a listener for AppMan updates
+        """
         self.retro_tiles_list = data
         for tile in self.retro_tiles_list:
             self.tile_list.addWidget(tile, self.update_signal)
 
     def setEnabled(self, enabled):
+        """
+        Enable the add button
+        Args:
+            enabled: True or False
+        """
         self.add_button.setEnabled(enabled)
 
     def update_signal(self, payload):
+        """
+        This is a signal that is triggered if there is an update event from the
+        Edit/Read modal. Propegate up to parent app.
+        """
         if len(payload["user_response"]) == 0:
             # No update, maybe delete?
             return
@@ -105,6 +132,10 @@ class RetroBox(QWidget):
         self.submit_signal.emit(payload)
 
     def accept_input(self):
+        """
+        This Displays a Dialog that accepts input.
+        This is called when user wants to add a response
+        """
         text, ok = QInputDialog().getMultiLineText(self, self.label.text(),
                                           self.label.text())
         if len(text) == 0 or not ok:

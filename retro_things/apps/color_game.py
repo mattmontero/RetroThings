@@ -15,26 +15,23 @@ class ColorGame(BaseWidget):
         self.submit.clicked.connect(self._send)
 
     def _send(self):
+        """
+        Connected to submit button
+        Emits message that user clicked button
+        """
         if self.username:
             payload = { "user": self.username, "color_submit": self.user_color}
             AppManager().sio.emit("color_game", payload)
 
     def _setup(self):
+        """
+        Set up the View
+        """
         self.layout.addWidget(self.label)
         self.layout.addWidget(self.submit)
         self.submit.setStyleSheet("width: 200px; height: 200px")
         self.setLayout(self.layout)
 
-    def init_update(self, server_data):
-        color_game_data = server_data['color_game']
-        user_data = server_data['users'][AppManager().sio.sid]
-        self._set_user_color(user_data.get('color', None))
-
-        color = color_game_data.get("current_color", None)
-        print("Current color:", color)
-        if color:
-            self._set_current_color(color)
-    
     def _set_current_color(self, color):
         self.label.setText(f"Current Color: {color}")
 
@@ -45,7 +42,27 @@ class ColorGame(BaseWidget):
         self.user_color = color
         self.submit.setStyleSheet(f"background: {color}; width: 200px; height: 200px")
 
+    def init_update(self, server_data):
+        """
+        init update is not set up correctly right now.
+        Needs to be hooked up correctly from AppManager
+        """
+        color_game_data = server_data['color_game']
+        user_data = server_data['users'][AppManager().sio.sid]
+        self._set_user_color(user_data.get('color', None))
+
+        color = color_game_data.get("current_color", None)
+        print("Current color:", color)
+        if color:
+            self._set_current_color(color)
+
     def update(self, data):
+        """
+        Received data from the server.
+        Should only be invoked by AppMan
+        Args:
+            data: Server state for color game
+        """
         print("Update data", data)
         color_game_data = data["server"]["color_game"]
 
